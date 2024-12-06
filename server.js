@@ -1,52 +1,55 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const mongoose = require('mongoose')
+const express = require('express');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const app = express();
 
-// Importing router
-const userRoutes = require('./backend/routes/userRoutes')
-const protect = require('./backend/middleware/authMiddleware')
-const taskRoutes = require("./backend/routes/taskRoutes");
+dotenv.config();
 
+// Importing routes and middleware
+const userRoutes = require('./backend/routes/userRoutes');
+const protect = require('./backend/middleware/authMiddleware').protect; // Protect middleware
+const taskRoutes = require('./backend/routes/taskRoutes');
+const { errorHandler } = require('./backend/middleware/errorMiddleware'); // Error handler middleware
 
-// Middleware
-const {errorHandler} = require('./backend/middleware/errorMiddleware')
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
-dotenv.config()
+// Test route for server status
+app.get('/api/status', (req, res) => {
+    res.status(200).json({ message: 'Server is running!' });
+});
 
-const app = express()
-// Middleware
-app.use(express.json())
-
-// Test route 
-app.get("/api/status", (req, res) => {
-    res.status(200).json({ message: "Server is running!" });
+// In server.js or your routes file
+app.get('/api/private', protect, (req, res) => {
+    res.status(200).json({
+        message: 'This is a protected route',
+        user: req.user // Ensure protect middleware populates req.user
+    });
 });
 
 
-app.get("/api/private", protect, (req, res) => {
-    res.status(200).json({ message: "This is a protected route", user: req.user });
-});
+// User-related routes
+app.use('/api/users', userRoutes);
 
+// Task-related routes
+app.use('/api/tasks', taskRoutes);
 
-// Use user routes
-app.use('/api/users', userRoutes)
-app.use("/api/tasks", taskRoutes)
+// Error handler middleware (should be the last middleware)
+app.use(errorHandler);
 
+// MongoDB connection and server startup (skip in test environment)
+if (process.env.NODE_ENV !== 'test') {
+    const PORT = process.env.PORT || 5000;
+    mongoose
+        .connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => {
+            console.log('Connected to MongoDB');
+            app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+        })
+        .catch(err => console.error(err));
+}
 
-app.use(errorHandler)
-
-const PORT = process.env.PORT || 5000
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
-    console.log('Connected to MongoDB');
-})
-.catch(()=>{
-    console.error('Error connecting to MongoDB:', error.message);
-})
+module.exports = app;
