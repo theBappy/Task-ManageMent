@@ -23,16 +23,16 @@ router.post(
 );
 
 // 🟢 **Get All Tasks for Logged-in User**
-router.get("/task", protect, getAllTasks);
+router.get("/", protect, getAllTasks);
 
 // 🟢 **Get a Single Task**
-router.get("/task/:id", protect, getTaskById);
+router.get("/:id", protect, getTaskById);
 
 // 🟢 **Update a Task**
-router.put("/task/:id", protect, updateTask);
+router.put("/:id", protect, updateTask);
 
 // 🟢 **Delete a Task**
-router.delete("/task/:id", protect, deleteTask);
+router.delete("/:id", protect, deleteTask);
 
 module.exports = router;
 

@@ -11,33 +11,36 @@ const app = express();
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize');
-
+const cors = require('cors');
 
 // 3. Import Routes and Middleware
 const userRoutes = require('./backend/routes/userRoutes');
-const taskRoutes = require('./backend/routes/taskRoutes');
+const taskRoutes = require('./backend/routes/taskRoutes'); // ✅ Correct route
 const { protect } = require('./backend/middleware/authMiddleware');
-const { notFoundHandler, errorHandler }= require('./backend/middleware/errorMiddleware');
+const { notFoundHandler, errorHandler } = require('./backend/middleware/errorMiddleware');
 
 // 4. Middleware to parse JSON request bodies
 app.use(express.json());
 
 app.set('trust proxy', 1);
 app.use(
-    rateLimiter ({
+    rateLimiter({
         windowsMs: 15 * 60 * 1000,
         max: 60, 
         message: 'Too many requests from this IP, please try again after 15 minutes',
     })
-)
+);
+app.use(cors());
 app.use(helmet());
 app.use(mongoSanitize());
 
 app.get('/', (req, res) => {
     res.send('Welcome to the Task Management App!');
 });
-  
 
+// ✅ Register user and task routes
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/tasks', taskRoutes); // ✅ No double forward slashes
 // Protected route example
 app.get('/api/v1/private', protect, (req, res) => res.status(200).json({
     message: 'This is a protected route',
@@ -46,10 +49,6 @@ app.get('/api/v1/private', protect, (req, res) => res.status(200).json({
 app.get('/api/v1/force-error', (req, res, next) => {
     next(new Error('Forced Server Error')); // This will trigger the error handler
 });
-  
-// Register user and task routes
-app.use('/api/v1/users', userRoutes);
-app.use('/api//v1/tasks', taskRoutes);
 
 // 6. Error handler middleware (this must be at the bottom)
 app.use(notFoundHandler);
@@ -59,8 +58,6 @@ app.use((req, res, next) => {
     console.log(`Incoming Request: ${req.method} ${req.path}`);
     next();
 });
-
-
 
 // 7. Database connection and server startup
 const startServer = async () => {
@@ -85,4 +82,5 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 module.exports = app;
+
 
