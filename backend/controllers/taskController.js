@@ -69,8 +69,8 @@ const getAllTasks = async (req, res) => {
     }
 };
 
-// 🟢 **Controller to Get a Single Task by ID**
-const getTaskById = async (req, res) => {
+// 🟢 **Controller to get a Task by ID**
+const getTaskById = async (req, res, next) => {
     try {
         const task = await Task.findById(req.params.id);
 
@@ -80,9 +80,14 @@ const getTaskById = async (req, res) => {
 
         res.status(200).json(task);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        if (error.name === "CastError") {
+            // Handle invalid ObjectId format
+            return res.status(500).json({ message: "Something went wrong" });
+        }
+        next(error); // For other types of errors, pass it to the global error handler
     }
 };
+
 
 // 🟢 **Controller to Update a Task**
 const updateTask = async (req, res) => {

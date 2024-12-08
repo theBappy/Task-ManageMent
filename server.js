@@ -12,7 +12,7 @@ const app = express();
 const userRoutes = require('./backend/routes/userRoutes');
 const taskRoutes = require('./backend/routes/taskRoutes');
 const { protect } = require('./backend/middleware/authMiddleware');
-const { errorHandler } = require('./backend/middleware/errorMiddleware');
+const { notFoundHandler, errorHandler }= require('./backend/middleware/errorMiddleware');
 
 // 4. Middleware to parse JSON request bodies
 app.use(express.json());
@@ -31,6 +31,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes);
 
 // 6. Error handler middleware (this must be at the bottom)
+app.use(notFoundHandler);
+
+
 app.use(errorHandler);
 
 // 7. Database connection and server startup

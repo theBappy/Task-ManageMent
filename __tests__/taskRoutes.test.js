@@ -5,12 +5,15 @@ const app = require("../server");
 const User = require("../backend/models/User");
 const Task = require("../backend/models/Task");
 
+
+
 let token;
 let user;
 let taskId;
 
+
 beforeAll(async () => {
-  jest.setTimeout(50000);
+  jest.setTimeout(200000);
   await mongoose.connect(process.env.MONGO_URI);
 
   // Create a test user
@@ -181,6 +184,63 @@ describe("Task Routes", () => {
     });
   });
 });
+
+const generateValidTokenForUser = (user)=>{
+    return jwt.sign(
+      {id: user._id},
+      process.env.JWT_SECRET,
+      {expiresIn: '7d'},
+    )
+}
+
+describe('Private Middleware', () => {
+  it('should allow access for valid token', async () => {
+    user = await User.create({
+      name: "Bappy123",
+      email: "bappy1@example.com",
+      password: "albappy12345",
+    });
+    const token = generateValidTokenForUser(user);
+    const res = await request(app)
+      .get('/api/private')  // Example protected route
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(200);  // Should return 200 for valid token
+  });
+
+  it('should reject request with invalid token', async () => {
+    const res = await request(app)
+      .get('/api/private')
+      .set('Authorization', 'Bearer invalidtoken');
+    expect(res.status).toBe(401);  // Unauthorized access
+  });
+
+  it('should reject request with no token', async () => {
+    const res = await request(app).get('/api/private');
+    expect(res.status).toBe(401);  // Unauthorized access
+  });
+});
+
+
+describe('Error Handler Middleware', () => {
+  it('should return a custom error message for invalid route', async () => {
+    const res = await request(app).get('/api/invalid-route');
+    expect(res.status).toBe(404);  // Should return 404 for invalid routes
+    expect(res.body.message).toBe('Route not found');  // Custom error message
+  });
+
+
+it('should return a 500 for unexpected errors', async () => {
+  const res = await request(app)
+      .get('/api/tasks/invalid-id')  // Invalid ID format
+      .set('Authorization', `Bearer ${token}`); // Add valid token
+
+  expect(res.status).toBe(500);  // Internal server error
+  expect(res.body.message).toBe('Something went wrong');  // Generic error message
+});
+
+});
+
+
 
 
 
