@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">86.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/40</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">25% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>1/4</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">86.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/40</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
@@ -88,35 +88,10 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -128,38 +103,29 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-// Catch undefined routes and return a 404 error
-const notFoundHandler = (req, res, next) =&gt; {
-    res.status(404).json({ message: "Route not found" });
-  };
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Catch undefined routes and return a 404 error
+const notFoundHandler = <span class="fstat-no" title="function not covered" >(req, res, next) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    res.status(404).json({ message: "Route not found" });</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
   
   // Generic error handler for unexpected errors (500)
-  const errorHandler = <span class="fstat-no" title="function not covered" >(err, req, res, next) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;</span>
-<span class="cstat-no" title="statement not covered" >    res.status(statusCode).json({</span>
-<span class="cstat-no" title="statement not covered" >        message: err.message || "Something went wrong",</span>
-<span class="cstat-no" title="statement not covered" >        stack: process.env.NODE_ENV === 'production' ? null : err.stack,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >};</span>
-&nbsp;
-module.exports = { errorHandler };
-&nbsp;
+  const errorHandler = (err, req, res, next) =&gt; {
+    const statusCode = res.statusCode === 200 ? 500<span class="branch-0 cbranch-no" title="branch not covered" > : res.statusCode;</span>
+    res.status(statusCode).json({
+        message: err.message<span class="branch-0 cbranch-no" title="branch not covered" > || 'Something went wrong',</span>
+        stack: process.env.NODE_ENV === 'production'<span class="branch-0 cbranch-no" title="branch not covered" > ? null </span>: err.stack,
+    });
+};
   
   module.exports = { notFoundHandler, errorHandler };
   
@@ -172,17 +138,6 @@ module.exports = { errorHandler };
 &nbsp;
 &nbsp;
 &nbsp;
-&nbsp;
-&nbsp;
-// const errorHandler = (err, req, res, next) =&gt; {
-//     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-//     res.status(statusCode).json({
-//         message: err.message,
-//         stack: process.env.NODE_ENV === "production" ? null : err.stack,
-//     });
-// };
-&nbsp;
-// module.exports = { errorHandler };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -190,7 +145,7 @@ module.exports = { errorHandler };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-07T15:54:18.042Z
+                at 2024-12-08T11:25:09.970Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

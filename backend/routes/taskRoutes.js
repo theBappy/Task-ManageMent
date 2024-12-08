@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const validateTask = require('../validators/taskValidator')
 const { 
     createTask, 
     getAllTasks, 
@@ -13,7 +14,8 @@ const { body } = require('express-validator');
 // 🟢 **Create a Task**
 router.post(
     "/",
-    protect, 
+    protect,
+    validateTask, 
     body('title', 'Title is required').notEmpty(), 
     body('status', 'Status must be one of: pending, in-progress, completed').optional().isIn(['pending', 'in-progress', 'completed']),
     body('dueDate', 'Invalid date format').optional().isISO8601(),

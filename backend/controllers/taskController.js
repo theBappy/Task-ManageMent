@@ -1,8 +1,10 @@
+const mongoose = require('mongoose');
 const Task = require('../models/Task');
 const { validationResult } = require('express-validator');
+const { notFoundHandler, errorHandler } = require('../middleware/errorMiddleware');  // Import the error handler
 
 // 🟢 **Controller to Create a New Task**
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -11,7 +13,7 @@ const createTask = async (req, res) => {
     const { title, description, status, dueDate } = req.body;
     if (!title || !description) {
         return res.status(400).json({ error: "Missing required fields" });
-    }      
+    }
 
     try {
         const task = new Task({
@@ -25,12 +27,12 @@ const createTask = async (req, res) => {
         await task.save();
         res.status(201).json(task);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);  // Pass error to the generic error handler
     }
 };
 
 // 🟢 **Controller to Get All Tasks for Logged-in User**
-const getAllTasks = async (req, res) => {
+const getAllTasks = async (req, res, next) => {
     const { status, sortBy, order, page = 1, limit = 10 } = req.query;
     const validSortFields = ["createdAt", "updatedAt", "priority"];
 
@@ -65,51 +67,51 @@ const getAllTasks = async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);  // Pass error to the generic error handler
     }
 };
 
 // 🟢 **Controller to get a Task by ID**
 const getTaskById = async (req, res, next) => {
     try {
-        const task = await Task.findById(req.params.id);
-
-        if (!task || task.user.toString() !== req.user.id) {
-            return res.status(404).json({ message: "Task not found" });
-        }
-
-        res.status(200).json(task);
+      const task = await Task.findById(req.params.id);
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' });
+      }
+  
+      if (task.user.toString() !== req.user.id) {
+        return res.status(403).json({ message: 'You do not have access to this task' });
+      }
+  
+      res.status(200).json(task);
     } catch (error) {
-        if (error.name === "CastError") {
-            // Handle invalid ObjectId format
-            return res.status(500).json({ message: "Something went wrong" });
-        }
-        next(error); // For other types of errors, pass it to the global error handler
+      next(error); // Pass error to errorHandler middleware
     }
 };
+  
 
 
 // 🟢 **Controller to Update a Task**
-const updateTask = async (req, res) => {
+const updateTask = async (req, res, next) => {
     try {
         const updatedTask = await Task.findByIdAndUpdate(
             req.params.id,
             { ...req.body },
             { new: true, runValidators: true }
         );
-        
+
         if (!updatedTask) {
             return res.status(404).json({ error: "Task not found" });
         }
 
         res.status(200).json(updatedTask);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);  // Pass error to the generic error handler
     }
 };
 
 // 🟢 **Controller to Delete a Task**
-const deleteTask = async (req, res) => {
+const deleteTask = async (req, res, next) => {
     try {
         const task = await Task.findByIdAndDelete(req.params.id);
 
@@ -119,7 +121,7 @@ const deleteTask = async (req, res) => {
 
         res.status(200).json({ message: "Task deleted successfully" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);  // Pass error to the generic error handler
     }
 };
 

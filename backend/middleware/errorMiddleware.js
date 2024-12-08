@@ -1,4 +1,3 @@
-
 // Catch undefined routes and return a 404 error
 const notFoundHandler = (req, res, next) => {
     res.status(404).json({ message: "Route not found" });
@@ -8,13 +7,10 @@ const notFoundHandler = (req, res, next) => {
   const errorHandler = (err, req, res, next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     res.status(statusCode).json({
-        message: err.message || "Something went wrong",
+        message: err.message || 'Something went wrong',
         stack: process.env.NODE_ENV === 'production' ? null : err.stack,
     });
 };
-
-module.exports = { errorHandler };
-
   
   module.exports = { notFoundHandler, errorHandler };
   
@@ -27,14 +23,3 @@ module.exports = { errorHandler };
 
 
 
-
-
-// const errorHandler = (err, req, res, next) => {
-//     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-//     res.status(statusCode).json({
-//         message: err.message,
-//         stack: process.env.NODE_ENV === "production" ? null : err.stack,
-//     });
-// };
-
-// module.exports = { errorHandler };
