@@ -33,6 +33,11 @@ app.use(
 app.use(helmet());
 app.use(mongoSanitize());
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the Task Management App!');
+});
+  
+
 // 5. Routes
 app.get('/api/status', (req, res) => res.status(200).json({ message: 'Server is running!' }));
 
