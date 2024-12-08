@@ -38,21 +38,18 @@ app.get('/', (req, res) => {
 });
   
 
-// 5. Routes
-app.get('/api/status', (req, res) => res.status(200).json({ message: 'Server is running!' }));
-
 // Protected route example
-app.get('/api/private', protect, (req, res) => res.status(200).json({
+app.get('/api/v1/private', protect, (req, res) => res.status(200).json({
     message: 'This is a protected route',
     user: req.user
 }));
-app.get('/api/force-error', (req, res, next) => {
+app.get('/api/v1/force-error', (req, res, next) => {
     next(new Error('Forced Server Error')); // This will trigger the error handler
-  });
+});
   
 // Register user and task routes
-app.use('/api/users', userRoutes);
-app.use('/api/tasks', taskRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api//v1/tasks', taskRoutes);
 
 // 6. Error handler middleware (this must be at the bottom)
 app.use(notFoundHandler);
@@ -70,14 +67,11 @@ const startServer = async () => {
     try {
         if (process.env.NODE_ENV !== 'test') {
             // Connect to MongoDB
-            await mongoose.connect(process.env.MONGO_URI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            });
+            await mongoose.connect(process.env.MONGO_URI);
             console.log('Connected to MongoDB');
         }
 
-        const PORT = process.env.PORT || 5000;
+        const PORT = process.env.PORT || 10000;
         app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
     } catch (error) {
